@@ -21,25 +21,28 @@
 GLint     Init_width = 300,
     Init_height = 300;
 GLdouble Width_factor = 1.0,     Height_factor = 1.0;
+//GLfloat   z_coord = 0.;
+GLfloat   z_coord = 4.0;
 
 void MyDisplay() {
 glClear(GL_COLOR_BUFFER_BIT);
 glColor3f(1.0, 0.0, 1.0);
 glBegin(GL_POLYGON);
-glVertex3f(-0.5, -0.5, 0.0);
-glVertex3f(0.5, -0.5, 0.0);
-glVertex3f(0.5, 0.5, 0.0);
-glVertex3f(-0.5, 0.5, 0.0);
+glVertex3f(-0.5, -0.5, z_coord ); //0.0);
+glVertex3f(0.5, -0.5, z_coord ); //0.0);
+glVertex3f(0.5, 0.5, z_coord ); //0.0);
+glVertex3f(-0.5, 0.5, z_coord ); //0.0);
 glEnd();
 glFlush();
 printf("calling MyDisplay...\n");
 }
 
+
 void MyReshape(int NewWidth, int NewHeight) {
 glViewport(0, 0, NewWidth,  NewHeight );
 
-Width_factor = NewWidth /(GLdouble)Init_width;
-Height_factor = NewHeight / (GLdouble)Init_height;
+GLdouble Width_factor = NewWidth /    (GLdouble)Init_width;
+GLdouble Height_factor = NewHeight /     (GLdouble)Init_height;
 
 glMatrixMode(GL_PROJECTION);
 glLoadIdentity();
@@ -48,6 +51,7 @@ glOrtho(     -1.0*Width_factor, 1.0*Width_factor,
         -1.0, 1.0); // 직교 투영 함수
 printf("calling MyReshape...\n");
 }
+
 
 
 int main(int argc, char** argv) {
