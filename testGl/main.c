@@ -4,6 +4,7 @@
 //
 //  Created by Ouimin Lee on 4/5/24.
 //
+#define GL_SILENCE_DEPRECATION
 #ifdef __APPLE__
 /* Defined before OpenGL and GLUT includes to avoid deprecation messages */
 #define GL_SILENCE_DEPRECATION
