@@ -25,167 +25,141 @@
 #include <math.h>
 #include <stdio.h>
 
-GLvoid  initgfx( GLvoid );
-GLvoid  drawScene( GLvoid );
-GLvoid  reshape( GLsizei, GLsizei );
-GLvoid  mouse( GLint, GLint, GLint, GLint );
-GLvoid  motion( GLint, GLint );
 
-GLfloat segSize=1.0, joint12Radius=1.0, joint3Radius=0.4, jointOrg=-4.0,
-           seg1ScaleSize=4.0, seg2ScaleSize=2.0, rotAngle=45.0;
 
-void resetView( GLvoid );
-void polarView( GLfloat, GLfloat, GLfloat, GLfloat );
 
-enum             actions { MOVE_EYE, TWIST_EYE, ZOOM, MOVE_NONE };
-static GLint     action;
-static GLdouble    xStart = 0.0, yStart = 0.0;
-static GLfloat     fovy, nearClip, farClip, distance, twistAngle, incAngle, azimAngle;
+int shoulder = 20, elbow = 0;
+
+
+//void func(float number) {
+//    glClear (GL_COLOR_BUFFER_BIT);
+//    glPushMatrix();
+//    glTranslatef (number, 0.0, 0.0);
+//    glRotatef ((GLfloat) shoulder, 1.0, 0.0, 0.0);
+//    
+//    glTranslatef (1.0, 0.0, 0.0);
+//    
+//    glPushMatrix();
+//    glScalef (1.0, 0.2, 1.0);
+//    glutWireCube (1.0);
+//    
+//    glTranslatef(-1.0, 0.0, -1.0); // Translate to the position between the cubes
+//    glutWireSphere(0.2, 20, 20); // Draw the sphere
+//    glPopMatrix();
+//    
+//    
+//    glTranslatef (-1.0, 0.0, -1.0);
+//    glRotatef ((GLfloat) elbow, 1.0, 0.0, 0.0);
+//    glTranslatef (1.0, 0.0, 0.0);
+//    glPushMatrix();
+//    glScalef (1.0, 0.2, 1.0);
+//    glutWireCube (1.0);
+//    glPopMatrix();
+//    
+//    glPopMatrix();
+//    glutSwapBuffers();
+//}
+void funky(float number){
+    glPushMatrix();
+    glTranslatef (number, 0.0, 0.0);
+    glRotatef ((GLfloat) shoulder, 1.0, 0.0, 0.0);
+    
+    glTranslatef (1.0, 0.0, 0.0);
+    
+    glPushMatrix();
+    glScalef (1.0, 0.2, 1.0);
+    glutWireCube (1.0);
+    
+//    glTranslatef(1.0, 0.0, -1.0); // Translate to the position between the cubes
+//    glutWireSphere(0.2, 20, 20); // Draw the sphere
+    glPopMatrix();
+    
+    
+    glTranslatef (-1.0, 0.0, -1.0);
+    glRotatef ((GLfloat) elbow, 1.0, 0.0, 0.0);
+    glTranslatef (1.0, 0.0, 0.0);
+    glPushMatrix();
+    glScalef (1.0, 0.2, 1.0);
+    glutWireCube (1.0);
+    glPopMatrix();
+    
+    glPopMatrix();
+}
+void init(void)
+{
+    glClearColor (0.0, 0.0, 0.0, 0.0);  // glShadeModel(GL_FLAT);
+}
+void display(void)
+{
+    glClear(GL_COLOR_BUFFER_BIT);
+        
+        // Draw all "thingies" within a single call
+        glPushMatrix();
+    
+    /*draws palm*/
+    glPushMatrix();
+    glTranslatef (1.0, 0.0, 0.0);
+    
+    glTranslatef (1.0, 0.0, 0.0);
+    
+    glPushMatrix();
+    
+    glPopMatrix();
+    
+    
+    funky(-1.0);
+    funky(-2.0);
+    funky(-3.0);
+    funky(-4.0);
+        glPopMatrix();
+        
+        glutSwapBuffers();
+}
+
+void reshape (int w, int h)
+{
+    glViewport (0, 0, (GLsizei) w, (GLsizei) h);
+    glMatrixMode (GL_PROJECTION);
+    glLoadIdentity ();
+    gluPerspective(65.0, (GLfloat) w/(GLfloat) h, 1.0, 7.0);
+    //   gluPerspective(65.0, (GLfloat) w/(GLfloat) h, 1.0, 5.5);
+    //   gluPerspective(65.0, (GLfloat) w/(GLfloat) h, 1.0, 5.4);
+    //glOrtho(-4.0, 4.0, -4.0, 4.0, 1.0, 10.0);
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+    gluLookAt(0., 0., 6., 0., 0., 0., 0., 1., 0.);
+}
+void keyboard (unsigned char key, int x, int y)
+{
+    switch (key) {
+        case 's':
+            shoulder = (shoulder + 5) % 360;
+            glutPostRedisplay();         break;
+        case 'S':
+            shoulder = (shoulder - 5) % 360;
+            glutPostRedisplay();         break;
+        case 'e':
+            elbow = (elbow + 5) % 360;
+            glutPostRedisplay();         break;
+        case 'E':
+            elbow = (elbow - 5) % 360;
+            glutPostRedisplay();         break;
+        case 27:
+            exit(0);         break;
+        default:         break;
+    }
+}
 
 int main(int argc, char** argv) {
     glutInit(&argc, argv); // Initialize GLUT
-    GLsizei width, height;    glutInit( &argc, argv );
-
-    width = glutGet( GLUT_SCREEN_WIDTH );
-    height = glutGet( GLUT_SCREEN_HEIGHT );
-    glutInitWindowPosition( width / 4, height / 4 );
-    glutInitWindowSize( (width / 2) - 4, height / 2 );
-    glutInitDisplayMode( GLUT_RGBA | GLUT_DEPTH | GLUT_DOUBLE );
-    glutCreateWindow( argv[0] );
-
-    initgfx();
-
-    glutMouseFunc( mouse );    glutMotionFunc( motion );    glutReshapeFunc( reshape );
-    glutDisplayFunc( drawScene );
-
+    glutInitDisplayMode (GLUT_DOUBLE | GLUT_RGB);
+    glutInitWindowSize (500, 500);
+    glutInitWindowPosition (100, 100);
+    glutCreateWindow ("Robot Arm");
+    init ();
+    glutDisplayFunc(display);
+    glutReshapeFunc(reshape);
+    glutKeyboardFunc(keyboard);
     glutMainLoop();
 }
-
-GLvoid  initgfx( GLvoid )
-{
-    glClearColor( 0.0, 0.0, 0.0, 1.0 );
-
-    glEnable( GL_DEPTH_TEST );
-    fovy = 60.0;
-    nearClip = 3.0;
-    farClip  = 12.0;
-    resetView();
-    glEnable( GL_LIGHT0 );
-}
-
-GLvoid  mouse( GLint button, GLint state, GLint x, GLint y )
-{
-    static GLint buttons_down = 0;
-
-    if (state == GLUT_DOWN) {
-         switch (button) {
-         case GLUT_LEFT_BUTTON:    action = MOVE_EYE; break;
-         case GLUT_MIDDLE_BUTTON:    action = TWIST_EYE; break;
-         case GLUT_RIGHT_BUTTON:    action = ZOOM;    break;
-         }
-         xStart = x;         yStart = y;
-    } else {
-         if (--buttons_down == 0)  action = MOVE_NONE;
-    }
-}
-
-GLvoid  motion( GLint x, GLint y )
-{
-    switch (action) {
-    case MOVE_EYE:
-         azimAngle += (GLdouble) (x - xStart);
-         incAngle -= (GLdouble) (y - yStart);         break;
-    case TWIST_EYE:
-         twistAngle = fmod(twistAngle+(x - xStart), 360.0);         break;
-    case ZOOM:
-         distance -= (GLdouble) (y - yStart)/10.0;         break;
-    default:
-         printf("unknown action %d\n", action);
-    }
-    
-    xStart = x;    yStart = y;
-    glutPostRedisplay();
-}
-
-void  resetView( GLvoid )
-{
-    distance = nearClip + (farClip - nearClip) / 2.0;
-    twistAngle = 0.0;    /* rotation of viewing volume (camera) */
-    incAngle = 0.0;    azimAngle = 0.0;    fovy = 90.0;
-}
-
-GLvoid   reshape( GLsizei width, GLsizei height )
-{
-    GLdouble     aspect;
-    glViewport( 0, 0, width, height );
-    aspect = (GLdouble) width / (GLdouble) height;
-
-    glMatrixMode( GL_PROJECTION );
-    glLoadIdentity();
-    gluPerspective( fovy, aspect, nearClip, farClip );
-    glMatrixMode( GL_MODELVIEW );
-}
-
-void   polarView( GLfloat distance, GLfloat azimuth, GLfloat incidence,
-              GLfloat twist)
-{
-    glTranslatef( 0.0, 0.0, -distance);
-    glRotatef( -twist, 0.0, 0.0, 1.0);
-    glRotatef( -incidence, 1.0, 0.0, 0.0);
-    glRotatef( -azimuth, 0.0, 0.0, 1.0);
-}
-
-GLvoid   drawScene( GLvoid )
-{
-  glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
-
-  glPushMatrix();
-      polarView( distance, azimAngle, incAngle, twistAngle );
-      glEnable( GL_LIGHTING );
-         
-      glPushMatrix();
-           glTranslatef( jointOrg, 0.0, 0.0 );
-           glutSolidSphere( joint12Radius, 31, 31 );
-      glPopMatrix();
-
-      glPushMatrix();
-           glTranslatef( jointOrg+joint12Radius +
-                                  (seg1ScaleSize*segSize)/2.0, 0.0, 0.0 );
-          
-           glPushMatrix();
-                     glScalef ( seg1ScaleSize, 1.0, 1.0 );
-                     glutSolidCube( segSize );
-           glPopMatrix();
-          
-    
-    glPushMatrix();
-                         glTranslatef( seg1ScaleSize/2.0+joint12Radius, 0.0, 0.0 );
-                         // if not, jointOrg+joint12Radius+
-                         // seg1ScaleSize/2.0+seg1ScaleSize/2.0+joint12Radius
-                         glutSolidSphere( joint12Radius, 31, 31 );
-
-                         glPushMatrix();
-          glRotatef( rotAngle, 0.0, 0.0, 1.0 );
-          glTranslatef( joint12Radius +
-                                                   (segSize*seg2ScaleSize)/2.0, 0.0, 0.0 );
-                  
-          glPushMatrix();
-                                          glScalef ( seg2ScaleSize, 1.0, 1.0 );
-                                          glutSolidCube( segSize );
-          glPopMatrix();
-          glPushMatrix();
-                   glTranslatef( (segSize*seg2ScaleSize)/2.0 +
-                                                                  joint3Radius, 0.0, 0.0 );
-                   glutSolidSphere( joint3Radius, 31, 31 );
-          glPopMatrix();
-
-                         glPopMatrix();
-                  glPopMatrix();
-             glPopMatrix();
-
-             glDisable( GL_LIGHTING );
-        glPopMatrix();
-        glutSwapBuffers();
-    }
-
 
