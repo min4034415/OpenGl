@@ -29,40 +29,30 @@
 
 
 int shoulder = 20, elbow = 0;
+int shoulder1 = 20, elbow1 = 0;
+int shoulder2 = 20, elbow2 = 0;
+int shoulder3 = 20, elbow3 = 0;
 
-
-//void func(float number) {
-//    glClear (GL_COLOR_BUFFER_BIT);
-//    glPushMatrix();
-//    glTranslatef (number, 0.0, 0.0);
-//    glRotatef ((GLfloat) shoulder, 1.0, 0.0, 0.0);
-//    
-//    glTranslatef (1.0, 0.0, 0.0);
-//    
-//    glPushMatrix();
-//    glScalef (1.0, 0.2, 1.0);
-//    glutWireCube (1.0);
-//    
-//    glTranslatef(-1.0, 0.0, -1.0); // Translate to the position between the cubes
-//    glutWireSphere(0.2, 20, 20); // Draw the sphere
-//    glPopMatrix();
-//    
-//    
-//    glTranslatef (-1.0, 0.0, -1.0);
-//    glRotatef ((GLfloat) elbow, 1.0, 0.0, 0.0);
-//    glTranslatef (1.0, 0.0, 0.0);
-//    glPushMatrix();
-//    glScalef (1.0, 0.2, 1.0);
-//    glutWireCube (1.0);
-//    glPopMatrix();
-//    
-//    glPopMatrix();
-//    glutSwapBuffers();
-//}
 void funky(float number){
     glPushMatrix();
     glTranslatef (number, 0.0, 0.0);
-    glRotatef ((GLfloat) shoulder, 1.0, 0.0, 0.0);
+    switch ((int)number) {
+        case -1:
+            glRotatef ((GLfloat) shoulder, 1.0, 0.0, 0.0);
+            break;
+        case -2:
+            glRotatef ((GLfloat) shoulder1, 1.0, 0.0, 0.0);
+            break;
+        case -3:
+            glRotatef ((GLfloat) shoulder2, 1.0, 0.0, 0.0);
+            break;
+        case -4:
+            glRotatef ((GLfloat) shoulder3, 1.0, 0.0, 0.0);
+            break;
+            
+        default:
+            break;
+    }
     
     glTranslatef (1.0, 0.0, 0.0);
     
@@ -70,13 +60,27 @@ void funky(float number){
     glScalef (1.0, 0.2, 1.0);
     glutWireCube (1.0);
     
-//    glTranslatef(1.0, 0.0, -1.0); // Translate to the position between the cubes
-//    glutWireSphere(0.2, 20, 20); // Draw the sphere
     glPopMatrix();
     
     
     glTranslatef (-1.0, 0.0, -1.0);
+    switch ((int)number) {
+        case -1:
     glRotatef ((GLfloat) elbow, 1.0, 0.0, 0.0);
+            break;
+        case -2:    
+            glRotatef ((GLfloat) elbow1, 1.0, 0.0, 0.0);
+            break;
+        case -3:            
+            glRotatef ((GLfloat) elbow2, 1.0, 0.0, 0.0);
+            break;
+        case -4:
+            glRotatef ((GLfloat) elbow3, 1.0, 0.0, 0.0);
+            break;
+        default:
+            break;
+    }
+//    glRotatef ((GLfloat) elbow, 1.0, 0.0, 0.0);
     glTranslatef (1.0, 0.0, 0.0);
     glPushMatrix();
     glScalef (1.0, 0.2, 1.0);
@@ -93,7 +97,6 @@ void display(void)
 {
     glClear(GL_COLOR_BUFFER_BIT);
         
-        // Draw all "thingies" within a single call
     glPushMatrix();
    glTranslatef (-1.0, 0.0, 2.0);
     glRotatef ((GLfloat) 20, 1.0, 0.0, 0.0);
@@ -141,18 +144,58 @@ void reshape (int w, int h)
 void keyboard (unsigned char key, int x, int y)
 {
     switch (key) {
-        case 's':
+        case 'y':
             shoulder = (shoulder + 5) % 360;
             glutPostRedisplay();         break;
-        case 'S':
+        case 'Y':
             shoulder = (shoulder - 5) % 360;
             glutPostRedisplay();         break;
-        case 'e':
+        case 'h':
             elbow = (elbow + 5) % 360;
             glutPostRedisplay();         break;
-        case 'E':
+        case 'H':
             elbow = (elbow - 5) % 360;
             glutPostRedisplay();         break;
+            
+        case 'u':
+            shoulder1 = (shoulder1 + 5) % 360;
+            glutPostRedisplay();         break;
+        case 'U':
+            shoulder1 = (shoulder1 - 5) % 360;
+            glutPostRedisplay();         break;
+        case 'j':
+            elbow1 = (elbow1 + 5) % 360;
+            glutPostRedisplay();         break;
+        case 'J':
+            elbow1 = (elbow1 - 5) % 360;
+            glutPostRedisplay();            break;
+            
+        case 'i':
+            shoulder2 = (shoulder2 + 5) % 360;
+            glutPostRedisplay();         break;
+        case 'I':
+            shoulder2 = (shoulder2 - 5) % 360;
+            glutPostRedisplay();         break;
+        case 'k':
+            elbow2 = (elbow2 + 5) % 360;
+            glutPostRedisplay();         break;
+        case 'K':
+            elbow2 = (elbow2 - 5) % 360;
+            glutPostRedisplay(); break;
+            
+        case 'o':
+            shoulder3 = (shoulder3 + 5) % 360;
+            glutPostRedisplay();         break;
+        case 'O':
+            shoulder3 = (shoulder3 - 5) % 360;
+            glutPostRedisplay();         break;
+        case 'l':
+            elbow3 = (elbow3 + 5) % 360;
+            glutPostRedisplay();         break;
+        case 'L':
+            elbow3 = (elbow3 - 5) % 360;
+            glutPostRedisplay(); break;
+            
         case 27:
             exit(0);         break;
         default:         break;
