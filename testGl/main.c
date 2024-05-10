@@ -94,17 +94,26 @@ void display(void)
     glClear(GL_COLOR_BUFFER_BIT);
         
         // Draw all "thingies" within a single call
-        glPushMatrix();
+    glPushMatrix();
+   glTranslatef (-1.0, 0.0, 2.0);
+    glRotatef ((GLfloat) 20, 1.0, 0.0, 0.0);
     
     /*draws palm*/
     glPushMatrix();
-    glTranslatef (1.0, 0.0, 0.0);
+    glTranslatef (0.0, 0.7, 3.5);
+       glScalef (-1.5, 0.2, 1.7);
+       glutWireCube (1.0); // Draw the palm
     
-    glTranslatef (1.0, 0.0, 0.0);
+       glPopMatrix();
     
-    glPushMatrix();
-    
-    glPopMatrix();
+////    glPushMatrix();
+//    glScalef (-4.0, 0.2, 4.0);
+//    glutWireCube (1.0);
+//    
+//    glRotatef ((GLfloat) shoulder, 1.0, 0.0, 0.0);
+//    
+//    glPopMatrix();
+//    
     
     
     funky(-1.0);
